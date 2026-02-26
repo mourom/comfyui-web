@@ -689,7 +689,211 @@
         .link-item:hover::after {
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
         }
-
+        
+        /* API 测试区域样式 */
+        .api-test {
+            padding: 60px;
+            margin: 80px 0;
+            text-align: center;
+        }
+        
+        .api-test h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .api-test:hover h2 {
+            transform: translateY(-5px);
+            background: linear-gradient(
+                90deg,
+                #ff6b6b,
+                #4ecdc4,
+                #45b7d1,
+                #96ceb4,
+                #ffeaa7
+            );
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow-shift 3s linear infinite;
+        }
+        
+        .api-test p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .api-test:hover p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .api-test-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+        
+        .api-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .btn-icon {
+            font-size: 1.2rem;
+        }
+        
+        .api-result {
+            margin-top: 40px;
+            text-align: left;
+        }
+        
+        .api-result h3 {
+            font-size: 1.4rem;
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .result-container {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+        
+        .response-content {
+            color: #a5b4fc;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+        
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .status-indicator.loading {
+            background-color: #f59e0b;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        .status-indicator.success {
+            background-color: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+        
+        .status-indicator.error {
+            background-color: #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+        
+        /* 滚动条样式 */
+        .result-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .result-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        
+        .result-container::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.5);
+            border-radius: 4px;
+        }
+        
+        .result-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.8);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .api-test {
+                padding: 40px 30px;
+            }
+            
+            .api-test h2 {
+                font-size: 1.8rem;
+            }
+            
+            .api-test-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .api-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .result-container {
+                padding: 20px;
+                max-height: 300px;
+            }
+            
+            .response-content {
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .api-test {
+                padding: 30px 20px;
+            }
+            
+            .api-test h2 {
+                font-size: 1.5rem;
+            }
+            
+            .api-test p {
+                font-size: 1rem;
+            }
+            
+            .api-btn {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+            }
+            
+            .result-container {
+                padding: 15px;
+                max-height: 250px;
+            }
+        }
+        
         
         /* 页脚样式 */
         footer {
@@ -973,7 +1177,8 @@
             mix-blend-mode: screen;
             backdrop-filter: blur(10px);
         }
-
+        
+        
         
         /* 背景互动效果 */
         .bg-interactive {
@@ -1102,33 +1307,105 @@
         
         // API 调用功能
         const API_BASE_URL = 'http://120.48.169.183:3000/api';
+        const apiResponseElement = document.getElementById('api-response');
+        const statusDotElement = document.getElementById('status-dot');
+        const statusTextElement = document.getElementById('status-text');
         
-        async function fetchUsers() {
+        // 设置API状态
+        function setApiStatus(status, message) {
+            statusDotElement.className = `status-indicator ${status}`;
+            statusTextElement.textContent = message;
+        }
+        
+        // 显示API响应结果
+        function displayApiResult(data, isError = false) {
+            const formattedData = JSON.stringify(data, null, 2);
+            apiResponseElement.textContent = formattedData;
+            apiResponseElement.style.color = isError ? '#f87171' : '#a5b4fc';
+        }
+        
+        // 测试API连接
+        async function testApiConnection() {
             try {
-                const response = await fetch(`${API_BASE_URL}/users`);
+                setApiStatus('loading', '测试中...');
+                displayApiResult('正在测试API连接...');
+                
+                const response = await fetch(`${API_BASE_URL}`);
                 if (!response.ok) {
-                    throw new Error('API 调用失败');
+                    throw new Error(`HTTP 错误！状态: ${response.status}`);
                 }
                 const data = await response.json();
-                console.log('用户数据:', data);
-                return data;
+                
+                setApiStatus('success', '连接成功');
+                displayApiResult(data);
+                console.log('API 连接成功:', data);
             } catch (error) {
-                console.error('错误:', error);
-                return null;
+                setApiStatus('error', '连接失败');
+                displayApiResult({ error: error.message }, true);
+                console.error('API 连接失败:', error);
             }
         }
         
-        // 页面加载时测试 API 连接
-        window.addEventListener('DOMContentLoaded', async () => {
+        // 获取用户列表
+        async function fetchUsers() {
             try {
-                const response = await fetch(`${API_BASE_URL}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('API 连接成功:', data);
+                setApiStatus('loading', '获取中...');
+                displayApiResult('正在获取用户列表...');
+                
+                const response = await fetch(`${API_BASE_URL}/users`);
+                if (!response.ok) {
+                    throw new Error(`HTTP 错误！状态: ${response.status}`);
                 }
+                const data = await response.json();
+                
+                setApiStatus('success', '获取成功');
+                displayApiResult(data);
+                console.log('用户列表:', data);
             } catch (error) {
-                console.log('API 连接失败，后端可能尚未启动:', error.message);
+                setApiStatus('error', '获取失败');
+                displayApiResult({ error: error.message }, true);
+                console.error('获取用户列表失败:', error);
             }
+        }
+        
+        // 创建测试用户
+        async function createTestUser() {
+            try {
+                setApiStatus('loading', '创建中...');
+                displayApiResult('正在创建测试用户...');
+                
+                const userData = {
+                    name: 'Test User',
+                    email: 'test@example.com'
+                };
+                const response = await fetch(`${API_BASE_URL}/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP 错误！状态: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                setApiStatus('success', '创建成功');
+                displayApiResult(data);
+                console.log('创建用户成功:', data);
+            } catch (error) {
+                setApiStatus('error', '创建失败');
+                displayApiResult({ error: error.message }, true);
+                console.error('创建用户失败:', error);
+            }
+        }
+        
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('页面加载完成，API测试区域已就绪...');
+            setApiStatus('', '就绪');
+            displayApiResult('点击上方按钮测试API...');
         });
     </script>
 </head>
@@ -1155,6 +1432,11 @@
             <p>欢迎访问 ComfyUI 官方网站，探索 AI 驱动的创意世界</p>
             <p>Welcome to the official ComfyUI website, exploring the AI-driven creative world</p>
             <a href="#contact" class="btn">开始探索 / Get Started</a>
+            <div style="margin-top: 30px;">
+                <button onclick="testApiConnection()" class="btn" style="margin-right: 15px;">测试API连接</button>
+                <button onclick="fetchUsers()" class="btn" style="margin-right: 15px;">获取用户列表</button>
+                <button onclick="createTestUser()" class="btn">创建测试用户</button>
+            </div>
         </div>
     </header>
     
@@ -1188,6 +1470,39 @@
     <!-- 主内容区 -->
     <div class="main-content">
         <div class="container">
+            <!-- API 测试区域 -->
+            <div class="api-test glass-card scroll-animate bg-interactive" id="api-test">
+                <h2>API 测试 / API Test</h2>
+                <p>测试后端 API 功能，验证前后端通信是否正常</p>
+                <p>Test backend API functionality and verify front-end and back-end communication</p>
+                
+                <div class="api-test-buttons">
+                    <button onclick="testApiConnection()" class="btn api-btn">
+                        <span class="btn-icon">🌐</span>
+                        测试API连接
+                    </button>
+                    <button onclick="fetchUsers()" class="btn api-btn">
+                        <span class="btn-icon">👥</span>
+                        获取用户列表
+                    </button>
+                    <button onclick="createTestUser()" class="btn api-btn">
+                        <span class="btn-icon">➕</span>
+                        创建测试用户
+                    </button>
+                </div>
+                
+                <div class="api-result">
+                    <h3>API 响应结果 / API Response</h3>
+                    <div class="result-container">
+                        <pre id="api-response" class="response-content">点击上方按钮测试API...</pre>
+                    </div>
+                    <div class="api-status" id="api-status">
+                        <span class="status-indicator" id="status-dot"></span>
+                        <span id="status-text">就绪</span>
+                    </div>
+                </div>
+            </div>
+            
             <!-- 联系部分 -->
             <div class="contact glass-card scroll-animate bg-interactive" id="contact">
                 <h2>合作联系 / Cooperation Contact</h2>
