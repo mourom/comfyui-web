@@ -1338,7 +1338,7 @@
                     setApiStatus('loading', '测试中...');
                     displayApiResult('正在测试API连接...');
                     
-                    const response = await fetch(`${API_BASE_URL}`);
+                    const response = await fetch(`${API_BASE_URL}`, { mode: 'cors' });
                     if (!response.ok) {
                         throw new Error(`HTTP 错误！状态: ${response.status}`);
                     }
@@ -1360,7 +1360,7 @@
                     setApiStatus('loading', '获取中...');
                     displayApiResult('正在获取用户列表...');
                     
-                    const response = await fetch(`${API_BASE_URL}/users`);
+                    const response = await fetch(`${API_BASE_URL}/users`, { mode: 'cors' });
                     if (!response.ok) {
                         throw new Error(`HTTP 错误！状态: ${response.status}`);
                     }
@@ -1388,6 +1388,7 @@
                     };
                     const response = await fetch(`${API_BASE_URL}/users`, {
                         method: 'POST',
+                        mode: 'cors',
                         headers: {
                             'Content-Type': 'application/json'
                         },
