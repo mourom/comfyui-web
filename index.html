@@ -1410,6 +1410,53 @@
                 }
             };
             
+            // 创建用户（从表单）
+            window.createUser = async function() {
+                try {
+                    const name = document.getElementById('user-name').value;
+                    const email = document.getElementById('user-email').value;
+                    
+                    if (!name || !email) {
+                        setApiStatus('error', '请填写姓名和邮箱');
+                        displayApiResult({ error: '姓名和邮箱不能为空' }, true);
+                        return;
+                    }
+                    
+                    setApiStatus('loading', '创建中...');
+                    displayApiResult('正在创建用户...');
+                    
+                    const userData = {
+                        name: name,
+                        email: email
+                    };
+                    const response = await fetch(`${API_BASE_URL}/users`, {
+                        method: 'POST',
+                        mode: 'cors',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userData)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP 错误！状态: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    
+                    setApiStatus('success', '创建成功');
+                    displayApiResult(data);
+                    console.log('创建用户成功:', data);
+                    
+                    // 清空表单
+                    document.getElementById('user-name').value = '';
+                    document.getElementById('user-email').value = '';
+                } catch (error) {
+                    setApiStatus('error', '创建失败');
+                    displayApiResult({ error: error.message }, true);
+                    console.error('创建用户失败:', error);
+                }
+            };
+            
             // 初始化API测试区域
             console.log('页面加载完成，API测试区域已就绪...');
             setApiStatus('', '就绪');
@@ -1497,6 +1544,25 @@
                         <span class="btn-icon">➕</span>
                         创建测试用户
                     </button>
+                </div>
+                
+                <!-- 用户创建表单 -->
+                <div class="user-create-form" style="margin-top: 40px; padding: 30px; background: rgba(0, 0, 0, 0.2); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <h3 style="color: white; margin-bottom: 20px;">创建用户 / Create User</h3>
+                    <div style="display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin: 0 auto;">
+                        <div>
+                            <label style="display: block; color: rgba(255, 255, 255, 0.8); margin-bottom: 5px;">姓名 / Name</label>
+                            <input type="text" id="user-name" placeholder="请输入姓名" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white; font-size: 1rem;">
+                        </div>
+                        <div>
+                            <label style="display: block; color: rgba(255, 255, 255, 0.8); margin-bottom: 5px;">邮箱 / Email</label>
+                            <input type="email" id="user-email" placeholder="请输入邮箱" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white; font-size: 1rem;">
+                        </div>
+                        <button onclick="createUser()" class="btn" style="width: 100%; margin-top: 10px;">
+                            <span class="btn-icon">👤</span>
+                            创建用户
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="api-result">
