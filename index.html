@@ -1312,6 +1312,24 @@
             // API 配置
             const API_BASE_URL = 'https://server.comfyui.com/api';
             
+            // 打开注册对话框
+            window.openRegisterModal = function() {
+                document.getElementById('register-modal').style.display = 'flex';
+                document.getElementById('register-result').style.display = 'none';
+            };
+            
+            // 关闭注册对话框
+            window.closeRegisterModal = function() {
+                document.getElementById('register-modal').style.display = 'none';
+            };
+            
+            // 点击对话框外部关闭
+            document.getElementById('register-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeRegisterModal();
+                }
+            });
+            
             // 创建用户（注册）
             window.createUser = async function() {
                 const name = document.getElementById('user-name').value;
@@ -1350,6 +1368,11 @@
                     document.getElementById('user-email').value = '';
                     
                     console.log('用户注册成功:', data);
+                    
+                    // 3秒后关闭对话框
+                    setTimeout(() => {
+                        closeRegisterModal();
+                    }, 2000);
                 } catch (error) {
                     resultDiv.style.display = 'block';
                     messageP.style.color = '#f87171';
@@ -1421,38 +1444,16 @@
     <!-- 主内容区 -->
     <div class="main-content">
         <div class="container">
-            <!-- 用户注册区域 -->
-            <div class="user-register glass-card scroll-animate bg-interactive" id="register">
-                <h2>用户注册 / User Registration</h2>
-                <p>注册成为ComfyUI社区成员，获取更多AI资源和服务</p>
-                <p>Register as a ComfyUI community member to access more AI resources and services</p>
-                
-                <div class="user-create-form" style="margin-top: 40px; padding: 30px; background: rgba(0, 0, 0, 0.2); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                    <div style="display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin: 0 auto;">
-                        <div>
-                            <label style="display: block; color: rgba(255, 255, 255, 0.8); margin-bottom: 5px;">姓名 / Name</label>
-                            <input type="text" id="user-name" placeholder="请输入姓名 / Enter your name" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white; font-size: 1rem;">
-                        </div>
-                        <div>
-                            <label style="display: block; color: rgba(255, 255, 255, 0.8); margin-bottom: 5px;">邮箱 / Email</label>
-                            <input type="email" id="user-email" placeholder="请输入邮箱 / Enter your email" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white; font-size: 1rem;">
-                        </div>
-                        <button onclick="createUser()" class="btn" style="width: 100%; margin-top: 10px;">
-                            <span class="btn-icon">👤</span>
-                            注册用户 / Register
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="register-result" style="margin-top: 20px; text-align: center; display: none;">
-                    <p id="register-message" style="color: #4ecdc4; font-size: 1.1rem;"></p>
-                </div>
-                
-                <div style="margin-top: 30px; text-align: center;">
-                    <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">
-                        用户管理请访问: <a href="https://server.comfyui.com/admin" style="color: #667eea;">https://server.comfyui.com/admin</a>
-                    </p>
-                </div>
+            <!-- 用户注册按钮 -->
+            <div style="text-align: center; margin: 40px 0;">
+                <button onclick="openRegisterModal()" class="btn" style="margin-right: 15px;">
+                    <span class="btn-icon">👤</span>
+                    用户注册 / Register
+                </button>
+                <a href="https://server.comfyui.com/admin" class="btn" target="_blank">
+                    <span class="btn-icon">⚙️</span>
+                    用户管理 / Admin
+                </a>
             </div>
             
             <!-- 联系部分 -->
@@ -1477,6 +1478,34 @@
                     <a href="https://tapnow.ai" target="_blank" class="link-item scroll-animate" style="transition-delay: 0.5s;">TapNow</a>
                     <a href="https://lovart.ai" target="_blank" class="link-item scroll-animate" style="transition-delay: 0.6s;">Lovart AI</a>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 用户注册弹出对话框 -->
+    <div id="register-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; justify-content: center; align-items: center;">
+        <div class="modal-content glass-card" style="background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.95)); padding: 40px; border-radius: 20px; max-width: 450px; width: 90%; position: relative;">
+            <button onclick="closeRegisterModal()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; color: rgba(255,255,255,0.6); font-size: 28px; cursor: pointer;">&times;</button>
+            <h2 style="color: white; margin-bottom: 10px; text-align: center;">用户注册 / Register</h2>
+            <p style="color: rgba(255,255,255,0.7); text-align: center; margin-bottom: 30px;">注册成为ComfyUI社区成员</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div>
+                    <label style="display: block; color: rgba(255, 255, 255, 0.8); margin-bottom: 8px; font-size: 0.9rem;">姓名 / Name</label>
+                    <input type="text" id="user-name" placeholder="请输入姓名" style="width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; color: white; font-size: 1rem; transition: all 0.3s;">
+                </div>
+                <div>
+                    <label style="display: block; color: rgba(255, 255, 255, 0.8); margin-bottom: 8px; font-size: 0.9rem;">邮箱 / Email</label>
+                    <input type="email" id="user-email" placeholder="请输入邮箱" style="width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; color: white; font-size: 1rem; transition: all 0.3s;">
+                </div>
+                <button onclick="createUser()" class="btn" style="width: 100%; margin-top: 10px; padding: 16px;">
+                    <span class="btn-icon">👤</span>
+                    注册 / Register
+                </button>
+            </div>
+            
+            <div id="register-result" style="margin-top: 20px; text-align: center; display: none;">
+                <p id="register-message" style="font-size: 1rem;"></p>
             </div>
         </div>
     </div>
