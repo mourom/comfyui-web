@@ -1309,151 +1309,52 @@
             // 初始化锚点链接处理
             handleAnchorLinks();
             
-            // API 相关元素和变量
+            // API 配置
             const API_BASE_URL = 'https://api.comfyui.com/api';
-            const apiResponseElement = document.getElementById('api-response');
-            const statusDotElement = document.getElementById('status-dot');
-            const statusTextElement = document.getElementById('status-text');
             
-            // 设置API状态
-            window.setApiStatus = function(status, message) {
-                if (statusDotElement && statusTextElement) {
-                    statusDotElement.className = `status-indicator ${status}`;
-                    statusTextElement.textContent = message;
-                }
-            };
-            
-            // 显示API响应结果
-            window.displayApiResult = function(data, isError = false) {
-                if (apiResponseElement) {
-                    const formattedData = JSON.stringify(data, null, 2);
-                    apiResponseElement.textContent = formattedData;
-                    apiResponseElement.style.color = isError ? '#f87171' : '#a5b4fc';
-                }
-            };
-            
-            // 测试API连接
-            window.testApiConnection = async function() {
-                try {
-                    setApiStatus('loading', '测试中...');
-                    displayApiResult('正在测试API连接...');
-                    
-                    const response = await fetch(`${API_BASE_URL}`, { mode: 'cors' });
-                    if (!response.ok) {
-                        throw new Error(`HTTP 错误！状态: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    
-                    setApiStatus('success', '连接成功');
-                    displayApiResult(data);
-                    console.log('API 连接成功:', data);
-                } catch (error) {
-                    setApiStatus('error', '连接失败');
-                    displayApiResult({ error: error.message }, true);
-                    console.error('API 连接失败:', error);
-                }
-            };
-            
-            // 获取用户列表
-            window.fetchUsers = async function() {
-                try {
-                    setApiStatus('loading', '获取中...');
-                    displayApiResult('正在获取用户列表...');
-                    
-                    const response = await fetch(`${API_BASE_URL}/users`, { mode: 'cors' });
-                    if (!response.ok) {
-                        throw new Error(`HTTP 错误！状态: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    
-                    setApiStatus('success', '获取成功');
-                    displayApiResult(data);
-                    console.log('用户列表:', data);
-                } catch (error) {
-                    setApiStatus('error', '获取失败');
-                    displayApiResult({ error: error.message }, true);
-                    console.error('获取用户列表失败:', error);
-                }
-            };
-            
-            // 创建测试用户
-            window.createTestUser = async function() {
-                try {
-                    setApiStatus('loading', '创建中...');
-                    displayApiResult('正在创建测试用户...');
-                    
-                    const userData = {
-                        name: 'Test User',
-                        email: 'test@example.com'
-                    };
-                    const response = await fetch(`${API_BASE_URL}/users`, {
-                        method: 'POST',
-                        mode: 'cors',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(userData)
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP 错误！状态: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    
-                    setApiStatus('success', '创建成功');
-                    displayApiResult(data);
-                    console.log('创建用户成功:', data);
-                } catch (error) {
-                    setApiStatus('error', '创建失败');
-                    displayApiResult({ error: error.message }, true);
-                    console.error('创建用户失败:', error);
-                }
-            };
-            
-            // 创建用户（从表单）
+            // 创建用户（注册）
             window.createUser = async function() {
+                const name = document.getElementById('user-name').value;
+                const email = document.getElementById('user-email').value;
+                const resultDiv = document.getElementById('register-result');
+                const messageP = document.getElementById('register-message');
+                
+                if (!name || !email) {
+                    resultDiv.style.display = 'block';
+                    messageP.style.color = '#f87171';
+                    messageP.textContent = '请填写姓名和邮箱 / Please fill in name and email';
+                    return;
+                }
+                
                 try {
-                    const name = document.getElementById('user-name').value;
-                    const email = document.getElementById('user-email').value;
-                    
-                    if (!name || !email) {
-                        setApiStatus('error', '请填写姓名和邮箱');
-                        displayApiResult({ error: '姓名和邮箱不能为空' }, true);
-                        return;
-                    }
-                    
-                    setApiStatus('loading', '创建中...');
-                    displayApiResult('正在创建用户...');
-                    
-                    const userData = {
-                        name: name,
-                        email: email
-                    };
+                    const userData = { name: name, email: email };
                     const response = await fetch(`${API_BASE_URL}/users`, {
                         method: 'POST',
                         mode: 'cors',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(userData)
                     });
                     
                     if (!response.ok) {
                         throw new Error(`HTTP 错误！状态: ${response.status}`);
                     }
+                    
                     const data = await response.json();
                     
-                    setApiStatus('success', '创建成功');
-                    displayApiResult(data);
-                    console.log('创建用户成功:', data);
+                    resultDiv.style.display = 'block';
+                    messageP.style.color = '#4ecdc4';
+                    messageP.textContent = `注册成功！欢迎 ${name} / Registration successful! Welcome ${name}`;
                     
                     // 清空表单
                     document.getElementById('user-name').value = '';
                     document.getElementById('user-email').value = '';
+                    
+                    console.log('用户注册成功:', data);
                 } catch (error) {
-                    setApiStatus('error', '创建失败');
-                    displayApiResult({ error: error.message }, true);
-                    console.error('创建用户失败:', error);
+                    resultDiv.style.display = 'block';
+                    messageP.style.color = '#f87171';
+                    messageP.textContent = `注册失败: ${error.message} / Registration failed`;
+                    console.error('用户注册失败:', error);
                 }
             };
             
@@ -1487,11 +1388,6 @@
             <p>欢迎访问 ComfyUI 官方网站，探索 AI 驱动的创意世界</p>
             <p>Welcome to the official ComfyUI website, exploring the AI-driven creative world</p>
             <a href="#contact" class="btn">开始探索 / Get Started</a>
-            <div style="margin-top: 30px;">
-                <button onclick="testApiConnection()" class="btn" style="margin-right: 15px;">测试API连接</button>
-                <button onclick="fetchUsers()" class="btn" style="margin-right: 15px;">获取用户列表</button>
-                <button onclick="createTestUser()" class="btn">创建测试用户</button>
-            </div>
         </div>
     </header>
     
@@ -1525,55 +1421,37 @@
     <!-- 主内容区 -->
     <div class="main-content">
         <div class="container">
-            <!-- API 测试区域 -->
-            <div class="api-test glass-card scroll-animate bg-interactive" id="api-test">
-                <h2>API 测试 / API Test</h2>
-                <p>测试后端 API 功能，验证前后端通信是否正常</p>
-                <p>Test backend API functionality and verify front-end and back-end communication</p>
+            <!-- 用户注册区域 -->
+            <div class="user-register glass-card scroll-animate bg-interactive" id="register">
+                <h2>用户注册 / User Registration</h2>
+                <p>注册成为ComfyUI社区成员，获取更多AI资源和服务</p>
+                <p>Register as a ComfyUI community member to access more AI resources and services</p>
                 
-                <div class="api-test-buttons">
-                    <button onclick="testApiConnection()" class="btn api-btn">
-                        <span class="btn-icon">🌐</span>
-                        测试API连接
-                    </button>
-                    <button onclick="fetchUsers()" class="btn api-btn">
-                        <span class="btn-icon">👥</span>
-                        获取用户列表
-                    </button>
-                    <button onclick="createTestUser()" class="btn api-btn">
-                        <span class="btn-icon">➕</span>
-                        创建测试用户
-                    </button>
-                </div>
-                
-                <!-- 用户创建表单 -->
                 <div class="user-create-form" style="margin-top: 40px; padding: 30px; background: rgba(0, 0, 0, 0.2); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                    <h3 style="color: white; margin-bottom: 20px;">创建用户 / Create User</h3>
                     <div style="display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin: 0 auto;">
                         <div>
                             <label style="display: block; color: rgba(255, 255, 255, 0.8); margin-bottom: 5px;">姓名 / Name</label>
-                            <input type="text" id="user-name" placeholder="请输入姓名" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white; font-size: 1rem;">
+                            <input type="text" id="user-name" placeholder="请输入姓名 / Enter your name" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white; font-size: 1rem;">
                         </div>
                         <div>
                             <label style="display: block; color: rgba(255, 255, 255, 0.8); margin-bottom: 5px;">邮箱 / Email</label>
-                            <input type="email" id="user-email" placeholder="请输入邮箱" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white; font-size: 1rem;">
+                            <input type="email" id="user-email" placeholder="请输入邮箱 / Enter your email" style="width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white; font-size: 1rem;">
                         </div>
                         <button onclick="createUser()" class="btn" style="width: 100%; margin-top: 10px;">
                             <span class="btn-icon">👤</span>
-                            创建用户
+                            注册用户 / Register
                         </button>
                     </div>
                 </div>
                 
-                <div class="api-result">
-                    <h3>API 响应结果 / API Response</h3>
-                    <div class="result-container">
-                        <pre id="api-response" class="response-content">点击上方按钮测试API...</pre>
-                    </div>
-                    <div class="api-status" id="api-status">
-                        <span class="status-indicator" id="status-dot"></span>
-                        <span id="status-text">就绪</span>
-                    </div>
+                <div id="register-result" style="margin-top: 20px; text-align: center; display: none;">
+                    <p id="register-message" style="color: #4ecdc4; font-size: 1.1rem;"></p>
+                </div>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">
+                        用户管理请访问: <a href="https://api.comfyui.com/admin" style="color: #667eea;">https://api.comfyui.com/admin</a>
+                    </p>
                 </div>
             </div>
             
